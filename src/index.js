@@ -14,6 +14,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   fetchToys();
 
+  let form = document.querySelector(".add-toy-form")
+  form.addEventListener("submit", makePostReq)
+
+ 
+
 });
 
 
@@ -41,7 +46,7 @@ function renderToy(toy) {
   //btn
   let btn = document.createElement("button")
   btn.className = "like-btn"
-  btn.innerText ="Like <3"
+  btn.innerText = "Like <3"
   //h2 tag
   let h2 = document.createElement("h2")
   h2.innerText = toy.name
@@ -51,8 +56,43 @@ function renderToy(toy) {
   // append card to toy-collection div
   let toyCollection = document.getElementById("toy-collection")
   toyCollection.appendChild(div)
-
+  //append all attributes to card
   div.append(img, btn, h2, p)
+  
+  //needs page to render before addding listner. put in same function that renders button
+  btn.addEventListener("click", likeBtn)
+}
 
+
+function makePostReq(event) {
+  event.preventDefault()
+
+  var inputName = document.querySelector("input[name = name]").value
+  var inputImg = document.querySelector("input[name = image]").value
+  let obj = {
+    name: inputName,
+    image: inputImg,
+    likes: 2
+  }
+
+  fetch("http://localhost:3000/toys", {
+    method: "POST",
+    headers: {
+      'Content-Type': "application/json",
+      Accept: "application/json"
+    },
+    body: JSON.stringify(obj)
+
+  }).then(response => response.json())
+    .then(toyData => renderToy(toyData))
 
 }
+
+function likeBtn() {
+  console.log("did it work?")
+}
+
+
+
+
+// https://images-na.ssl-images-amazon.com/images/I/71dl%2BQL9mNL._AC_SL1500_.jpg"
